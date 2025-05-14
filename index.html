@@ -6,23 +6,23 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <h1>Document Correction Checklist</h1>
+  <h1>Correction Checklist – Legal Documents</h1>
 
-  <form id="correctionForm">
-    <label>Case Link (via MyCase):</label><br>
+  <form id="formulario">
+    <label>Case link (via MyCase):</label><br>
     <input type="url" name="case_link"><br><br>
 
-    <label>Reviewed On:</label><br>
+    <label>Reviewed on:</label><br>
     <input type="date" name="reviewed_on"><br><br>
 
-    <label>Return By:</label><br>
+    <label>Return by:</label><br>
     <input type="date" name="return_by"><br><br>
 
-    <label>Reviewer Attorney Name:</label><br>
-    <input type="text" name="reviewer_name"><br><br>
+    <label>Reviewing Attorney:</label><br>
+    <input type="text" name="attorney"><br><br>
 
-    <label>Primary Responsible for Corrections:</label><br>
-    <select name="correction_responsible">
+    <label>Primary Reviewer:</label><br>
+    <select name="primary_reviewer">
       <option value=""></option>
       <option>Ísis Almeida Silva</option>
       <option>Naiara Daher</option>
@@ -41,16 +41,16 @@
       <option>Pedro Hartmann</option>
     </select><br><br>
 
-    <label>Document Reviewed:</label><br>
-    <select name="document_reviewed">
+    <label>Reviewed Document Name:</label><br>
+    <select name="document_name">
       <option value=""></option>
       <option>Cover Letter</option>
       <option>Final Package</option>
       <option>Form</option>
     </select><br><br>
 
-    <label>Document Version Link:</label><br>
-    <input type="url" name="document_version"><br><br>
+    <label>Document version (link):</label><br>
+    <input type="url" name="version_link"><br><br>
 
     <h3>Correction Item</h3>
     <label>Error Description:</label><br>
@@ -63,10 +63,10 @@
     <input type="text" name="error_paragraph"><br><br>
 
     <h3>Error Type:</h3>
-    <input type="checkbox" name="error_type" value="Graphical"> Graphical<br>
+    <input type="checkbox" name="error_type" value="Graphic"> Graphic<br>
     <input type="checkbox" name="error_type" value="Formatting"> Formatting<br>
     <input type="checkbox" name="error_type" value="Technical"> Technical<br>
-    <input type="text" name="error_other" placeholder="Other"><br><br>
+    <input type="text" name="other_errors" placeholder="Other"><br><br>
 
     <label>Expected Correction:</label><br>
     <textarea name="expected_correction"></textarea><br><br>
@@ -76,7 +76,7 @@
     <input type="radio" name="status" value="Partially addressed"> Partially addressed<br>
     <input type="radio" name="status" value="Not addressed"> Not addressed<br><br>
 
-    <label>If partially or not addressed, what was missing?</label><br>
+    <label>If partially or not addressed, describe what was missing:</label><br>
     <textarea name="missing_details"></textarea><br><br>
 
     <button type="button" onclick="generatePDF()">Save as PDF</button>
@@ -86,12 +86,12 @@
     async function generatePDF() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
-      const form = document.getElementById('correctionForm');
+      const form = document.getElementById('formulario');
       const formData = new FormData(form);
       let y = 10;
 
       doc.setFontSize(12);
-      doc.text("Document Correction Checklist", 10, y);
+      doc.text("Correction Checklist", 10, y);
       y += 10;
 
       for (const [name, value] of formData.entries()) {
@@ -106,7 +106,7 @@
         }
       }
 
-      doc.save("correction_form.pdf");
+      doc.save("correction_checklist.pdf");
     }
   </script>
 </body>
