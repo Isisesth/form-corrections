@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <title>Correction Checklist</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    .correction-group {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 15px;
+    }
+  </style>
 </head>
 <body>
   <h1>Correction Checklist – Legal Documents</h1>
@@ -52,37 +59,53 @@
     <label>Document version (link):</label><br>
     <input type="url" name="version_link"><br><br>
 
-    <h3>Correction Item</h3>
-    <label>Error Description:</label><br>
-    <textarea name="error_description"></textarea><br><br>
+    <div id="correction-items-container"></div>
 
-    <label>Error Page:</label><br>
-    <input type="text" name="error_page"><br><br>
-
-    <label>Error Paragraph:</label><br>
-    <input type="text" name="error_paragraph"><br><br>
-
-    <h3>Error Type:</h3>
-    <input type="checkbox" name="error_type" value="Graphic"> Graphic<br>
-    <input type="checkbox" name="error_type" value="Formatting"> Formatting<br>
-    <input type="checkbox" name="error_type" value="Technical"> Technical<br>
-    <input type="text" name="other_errors" placeholder="Other"><br><br>
-
-    <label>Expected Correction:</label><br>
-    <textarea name="expected_correction"></textarea><br><br>
-
-    <h3>After Review</h3>
-    <input type="radio" name="status" value="Fully addressed"> Fully addressed<br>
-    <input type="radio" name="status" value="Partially addressed"> Partially addressed<br>
-    <input type="radio" name="status" value="Not addressed"> Not addressed<br><br>
-
-    <label>If partially or not addressed, describe what was missing:</label><br>
-    <textarea name="missing_details"></textarea><br><br>
-
+    <button type="button" onclick="addCorrectionItem()">Add Correction Item</button><br><br>
     <button type="button" onclick="generatePDF()">Save as PDF</button>
   </form>
 
   <script>
+    let itemIndex = 0;
+
+    function addCorrectionItem() {
+      const container = document.getElementById("correction-items-container");
+
+      const html = `
+        <div class="correction-group">
+          <h3>Correction Item ${itemIndex + 1}</h3>
+          <label>Error Description:</label><br>
+          <textarea name="error_description_${itemIndex}"></textarea><br><br>
+
+          <label>Error Page:</label><br>
+          <input type="text" name="error_page_${itemIndex}"><br><br>
+
+          <label>Error Paragraph:</label><br>
+          <input type="text" name="error_paragraph_${itemIndex}"><br><br>
+
+          <label>Error Type:</label><br>
+          <input type="checkbox" name="error_type_${itemIndex}" value="Graphic"> Graphic<br>
+          <input type="checkbox" name="error_type_${itemIndex}" value="Formatting"> Formatting<br>
+          <input type="checkbox" name="error_type_${itemIndex}" value="Technical"> Technical<br>
+          <input type="text" name="other_errors_${itemIndex}" placeholder="Other"><br><br>
+
+          <label>Expected Correction:</label><br>
+          <textarea name="expected_correction_${itemIndex}"></textarea><br><br>
+
+          <label>After Review:</label><br>
+          <input type="radio" name="status_${itemIndex}" value="Fully addressed"> Fully addressed<br>
+          <input type="radio" name="status_${itemIndex}" value="Partially addressed"> Partially addressed<br>
+          <input type="radio" name="status_${itemIndex}" value="Not addressed"> Not addressed<br><br>
+
+          <label>If partially or not addressed, what was missing?</label><br>
+          <textarea name="missing_details_${itemIndex}"></textarea><br><br>
+        </div>
+      `;
+
+      container.insertAdjacentHTML("beforeend", html);
+      itemIndex++;
+    }
+
     async function generatePDF() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
