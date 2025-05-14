@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Correction Checklist</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    .correction-group {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Correction Checklist – Legal Documents</h1>
+
+  <form id="formulario">
+    <label>Case link (via MyCase):</label><br>
+    <input type="url" name="case_link"><br><br>
+
+    <label>Reviewed on:</label><br>
+    <input type="date" name="reviewed_on"><br><br>
+
+    <label>Return by:</label><br>
+    <input type="date" name="return_by"><br><br>
+
+    <label>Reviewing Attorney:</label><br>
+    <input type="text" name="attorney"><br><br>
+
+    <label>Primary Reviewer:</label><br>
+    <select name="primary_reviewer">
+      <option value=""></option>
+      <option>Ísis Almeida Silva</option>
+      <option>Naiara Daher</option>
+      <option>Sandra Moser</option>
+    </select><br><br>
+
+    <label>Case Manager:</label><br>
+    <select name="case_manager">
+      <option value=""></option>
+      <option>Fabiana Nascimento</option>
+      <option>Isis A. Silva</option>
+      <option>Lucas Franco</option>
+      <option>Myrelle Sinder</option>
+      <option>Mylena Rodrigues</option>
+      <option>Paola Fantinatti</option>
+      <option>Pedro Hartmann</option>
+    </select><br><br>
+
+    <label>Reviewed Document Name:</label><br>
+    <select name="document_name">
+      <option value=""></option>
+      <option>Cover Letter</option>
+      <option>Final Package</option>
+      <option>Form</option>
+    </select><br><br>
+
+    <label>Document version (link):</label><br>
+    <input type="url" name="version_link"><br><br>
+
+    <div id="correction-items-container"></div>
+
+    <button type="button" onclick="addCorrectionItem()">Add Correction Item</button><br><br>
+    <button type="button" onclick="generatePDF()">Save as PDF</button>
+  </form>
+
+  <script>
+    let itemIndex = 0;
+
+    function addCorrectionItem() {
+      const container = document.getElementById("correction-items-container");
+
+      const html = `
+        <div class="correction-group">
+          <h3>Correction Item ${itemIndex + 1}</h3>
+          <label>Error Description:</label><br>
+          <textarea name="error_description_${itemIndex}"></textarea><br><br>
+
+          <label>Error Page:</label><br>
+          <input type="text" name="error_page_${itemIndex}"><br><br>
+
+          <label>Error Paragraph:</label><br>
+          <input type="text" name="error_paragraph_${itemIndex}"><br><br>
+
+          <label>Error Type:</label><br>
+          <input type="checkbox" name="error_type_${itemIndex}" value="Graphic"> Graphic<br>
+          <input type="checkbox" name="error_type_${itemIndex}" value="Formatting"> Formatting<br>
+          <input type="checkbox" name="error_type_${itemIndex}" value="Technical"> Technical<br>
+          <input type="text" name="other_errors_${itemIndex}" placeholder="Other"><br><br>
+
+          <label>Expected Correction:</label><br>
+          <textarea name="expected_correction_${itemIndex}"></textarea><br><br>
+
+          <label>After Review:</label><br>
+          <input type="radio" name="status_${itemIndex}" value="Fully addressed"> Fully addressed<br>
+          <input type="radio" name="status_${itemIndex}" value="Partially addressed"> Partially addressed<br>
+          <input type="radio" name="status_${itemIndex}" value="Not addressed"> Not addressed<br><br>
+
+          <label>If partially or not addressed, what was missing?</label><br>
+          <textarea name="missing_details_${itemIndex}"></textarea><br><br>
+        </div>
+      `;
+
+      container.insertAdjacentHTML("beforeend", html);
+      itemIndex++;
+    }
+
+    async function generatePDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const form = document.getElementById('formulario');
+      const formData = new FormData(form);
+      let y = 10;
+
+      doc.setFontSize(12);
+      doc.text("Correction Checklist", 10, y);
+      y += 10;
+
+      for (const [name, value] of formData.entries()) {
+        if (value.trim() !== "") {
+          const label = name.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+          doc.text(`${label}: ${value}`, 10, y);
+          y += 10;
+          if (y > 280) {
+            doc.addPage();
+            y = 10;
+          }
+        }
+      }
+
+      doc.save("correction_checklist.pdf");
+    }
+  </script>
+</body>
+</html>
+
+
