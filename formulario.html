@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Correction Checklist</title>
+    <script>
+        // Show "What was missing?" field if "Partially met" or "Not met" is selected
+        function toggleMissingField() {
+            var status = document.querySelector('input[name="status"]:checked');
+            var field = document.getElementById("missingField");
+            if (status && (status.value === "Partially met" || status.value === "Not met")) {
+                field.style.display = "block";
+            } else {
+                field.style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Document Correction Checklist</h1>
+
+    <form method="post" action="gerar_pdf.py">
+        <!-- Case Link -->
+        <label>Case Link (MyCase):</label><br>
+        <input type="url" name="case_link"><br><br>
+
+        <!-- Reviewed On -->
+        <label>Reviewed On:</label><br>
+        <input type="date" name="reviewed_on"><br><br>
+
+        <!-- Return By -->
+        <label>Return By:</label><br>
+        <input type="date" name="return_by"><br><br>
+
+        <!-- Reviewing Attorney -->
+        <label>Reviewing Attorney:</label><br>
+        <input type="text" name="reviewing_attorney"><br><br>
+
+        <!-- Primary Responsible for Corrections -->
+        <label>Primary Responsible for Corrections:</label><br>
+        <select name="responsible">
+            <option value=""></option>
+            <option>Ísis Almeida Silva</option>
+            <option>Naiara Daher</option>
+            <option>Sandra Moser</option>
+        </select><br><br>
+
+        <!-- Case Manager -->
+        <label>Case Manager:</label><br>
+        <select name="case_manager">
+            <option value=""></option>
+            <option>Fabiana Nascimento</option>
+            <option>Isis A. Silva</option>
+            <option>Lucas Franco</option>
+            <option>Myrelle Sinder</option>
+            <option>Mylena Rodrigues</option>
+            <option>Paola Fantinatti</option>
+            <option>Pedro Hartmann</option>
+        </select><br><br>
+
+        <!-- Document Name -->
+        <label>Document Name:</label><br>
+        <select name="document_name">
+            <option value=""></option>
+            <option>Cover Letter</option>
+            <option>Final Package</option>
+            <option>Form</option>
+        </select><br><br>
+
+        <!-- Document Version -->
+        <label>Document Version (Link):</label><br>
+        <input type="url" name="document_version"><br><br>
+
+        <!-- Correction Item -->
+        <h3>Correction Item</h3>
+
+        <label>Error Description:</label><br>
+        <textarea name="error_description"></textarea><br><br>
+
+        <label>Error Page:</label><br>
+        <input type="text" name="error_page"><br><br>
+
+        <label>Error Paragraph:</label><br>
+        <input type="text" name="error_paragraph"><br><br>
+
+        <h4>Error Type:</h4>
+        <input type="checkbox" name="error_type" value="Graphic"> Graphic<br>
+        <input type="checkbox" name="error_type" value="Formatting"> Formatting<br>
+        <input type="checkbox" name="error_type" value="Technical"> Technical<br>
+        <input type="text" name="other_errors" placeholder="Other"><br><br>
+
+        <label>Expected Correction:</label><br>
+        <textarea name="expected_correction"></textarea><br><br>
+
+        <h3>After Review</h3>
+
+        <input type="radio" name="status" value="Fully met" onchange="toggleMissingField()"> Fully met<br>
+        <input type="radio" name="status" value="Partially met" onchange="toggleMissingField()"> Partially met<br>
+        <input type="radio" name="status" value="Not met" onchange="toggleMissingField()"> Not met<br><br>
+
+        <div id="missingField" style="display:none;">
+            <label>If partially or not met, what was missing? Describe:</label><br>
+            <textarea name="missing_explanation"></textarea><br><br>
+        </div>
+
+        <button type="submit">Submit and Save as PDF</button>
+    </form>
+</body>
+</html>
