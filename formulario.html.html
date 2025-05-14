@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Checklist de Correções</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <h1>Checklist de Correções</h1>
+
+  <form id="formulario">
+    <label>Processo (Link do caso via MyCase):</label><br>
+    <input type="url" name="processo"><br><br>
+
+    <label>Revisado em:</label><br>
+    <input type="date" name="revisado_em"><br><br>
+
+    <label>Devolver até:</label><br>
+    <input type="date" name="devolver_ate"><br><br>
+
+    <label>Nome do Advogado Revisor:</label><br>
+    <input type="text" name="advogado"><br><br>
+
+    <label>Responsável pelas Correções (Primário):</label><br>
+    <select name="responsavel">
+      <option value=""></option>
+      <option>Ísis Almeida Silva</option>
+      <option>Naiara Daher</option>
+      <option>Sandra Moser</option>
+    </select><br><br>
+
+    <label>Case Manager:</label><br>
+    <select name="case_manager">
+      <option value=""></option>
+      <option>Fabiana Nascimento</option>
+      <option>Isis A. Silva</option>
+      <option>Lucas Franco</option>
+      <option>Myrelle Sinder</option>
+      <option>Mylena Rodrigues</option>
+      <option>Paola Fantinatti</option>
+      <option>Pedro Hartmann</option>
+    </select><br><br>
+
+    <label>Nome do Documento Revisado:</label><br>
+    <select name="documento">
+      <option value=""></option>
+      <option>Cover Letter</option>
+      <option>Final Package</option>
+      <option>Formulário</option>
+    </select><br><br>
+
+    <label>Versão do documento (Link):</label><br>
+    <input type="url" name="link_versao"><br><br>
+
+    <h3>Item de Correção</h3>
+    <label>Descrição do erro identificado:</label><br>
+    <textarea name="descricao_erro"></textarea><br><br>
+
+    <label>Página do erro identificado:</label><br>
+    <input type="text" name="pagina"><br><br>
+
+    <label>Parágrafo do erro identificado:</label><br>
+    <input type="text" name="paragrafo"><br><br>
+
+    <h3>Tipo de erro:</h3>
+    <input type="checkbox" name="erro_tipo" value="Gráfico"> Gráfico<br>
+    <input type="checkbox" name="erro_tipo" value="Formatação"> Formatação<br>
+    <input type="checkbox" name="erro_tipo" value="Técnico"> Técnico<br>
+    <input type="text" name="erro_outros" placeholder="Outros"><br><br>
+
+    <label>O que se espera na correção:</label><br>
+    <textarea name="esperado"></textarea><br><br>
+
+    <h3>Após revisão</h3>
+    <input type="radio" name="status" value="Totalmente atendido"> Totalmente atendido<br>
+    <input type="radio" name="status" value="Parcialmente atendido"> Parcialmente atendido<br>
+    <input type="radio" name="status" value="Não atendido"> Não atendido<br><br>
+
+    <label>Se parcialmente ou não atendido, o que faltou?</label><br>
+    <textarea name="faltou"></textarea><br><br>
+
+    <button type="button" onclick="gerarPDF()">Salvar em PDF</button>
+  </form>
+
+  <script>
+    async function gerarPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const form = document.getElementById('formulario');
+      const formData = new FormData(form);
+      let y = 10;
+
+      doc.setFontSize(12);
+      doc.text("Checklist de Correções", 10, y);
+      y += 10;
+
+      for (const [name, value] of formData.entries()) {
+        if (value.trim() !== "") {
+          doc.text(`${name.replace(/_/g, " ")}: ${value}`, 10, y);
+          y += 10;
+          if (y > 280) {
+            doc.addPage();
+            y = 10;
+          }
+        }
+      }
+
+      doc.save("formulario_corrigido.pdf");
+    }
+  </script>
+</body>
+</html>
+
+
